@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SectionFinder — Steel Section Reference</title>
+  <meta name="description" content="South Africa's professional structural steel section reference app. 541 sections, 14 profiles, full structural properties. For engineers, fabricators and detailers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #1a1a2e;
+      --surface2:  #1e2433;
+      --teal:      #00bcd4;
+      --teal-dim:  #00838f;
+      --teal-glow: rgba(0,188,212,0.12);
+      --white:     #ffffff;
+      --muted:     #8b9db5;
+      --steel:     #b0bec5;
+      --border:    #2a3441;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body:    'Inter', sans-serif;
+      --font-mono:    'Space Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(42,52,65,0.6);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img { width: 32px; height: 32px; display: block; }
+
+    .nav-logo-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+
+    .nav-logo-text span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--teal);
+      color: var(--bg) !important;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: #26c6da !important; color: var(--bg) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 120px 48px 80px;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,188,212,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,188,212,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .hero-grid::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 40%, var(--bg) 100%);
+    }
+
+    .hero-ibeam {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.06;
+      width: 560px;
+      height: 560px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      padding: 6px 14px;
+      border: 1px solid rgba(0,188,212,0.3);
+      border-radius: 4px;
+      background: rgba(0,188,212,0.06);
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 48px;
+      font-weight: 400;
+    }
+
+    .hero-sub strong {
+      color: var(--steel);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--teal);
+      color: var(--bg);
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #26c6da;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0,188,212,0.3);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-1px);
+    }
+
+    .play-badge-link {
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .play-badge-link:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
+    .play-badge-img {
+      height: 52px;
+      width: auto;
+      display: block;
+    }
+
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 64px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+    }
+
+    /* ── SECTIONS PREVIEW ── */
+    .sections-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 48px;
+      overflow: hidden;
+    }
+
+    .sections-bar-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: scroll-left 30s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .section-tag.highlight {
+      color: var(--teal);
+      border-color: rgba(0,188,212,0.4);
+      background: var(--teal-glow);
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 64px;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(0,188,212,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(0,188,212,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--teal);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── PROFILES SECTION ── */
+    .profiles {
+      padding: 100px 48px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profiles-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 48px;
+    }
+
+    .profile-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .profile-item:hover {
+      border-color: var(--teal);
+      background: var(--teal-glow);
+    }
+
+    .profile-code {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+
+    .profile-name {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── FOR WHO ── */
+    .for-who {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .audience-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--steel);
+    }
+
+    .audience-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      margin: 0 48px 100px;
+      background: linear-gradient(135deg, var(--surface) 0%, #1a2535 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 64px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      max-width: 1104px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 20%; right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    }
+
+    .cta-band h2 {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .cta-band p {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 36px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px;
+      border-top: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .footer-brand strong {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--teal); }
+
+    .footer-links .divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+    }
+
+    .footer-fineprint {
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.6;
+      font-family: var(--font-mono);
+      letter-spacing: 0.2px;
+    }
+
+    /* ── LEGAL PAGES ── */
+    .legal-page {
+      display: none;
+      padding: 120px 48px 80px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .legal-page.active { display: block; }
+
+    .legal-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--teal);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 40px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+    }
+
+    .legal-back:hover { opacity: 0.8; }
+
+    .legal-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .legal-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legal-content {
+      color: var(--steel);
+      font-size: 15px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      font-family: var(--font-body);
+    }
+
+    /* ── MAIN/LEGAL TOGGLE ── */
+    .main-content { display: block; }
+    .main-content.hidden { display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-ibeam { display: none; }
+      .hero-stats { gap: 24px; }
+      .stat-divider { display: none; }
+      .features, .for-who { padding: 60px 24px; }
+      .profiles { padding: 60px 24px; }
+      .cta-band { margin: 0 24px 60px; padding: 40px 24px; }
+      footer { padding: 32px 24px; }
+      .footer-row { flex-direction: column; align-items: flex-start; }
+      .sections-bar { padding: 16px 24px; }
+      .legal-page { padding: 100px 24px 60px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sections-bar-inner { animation: none; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" onclick="showMain()">
+    <img src="logo.svg" alt="SectionFinder logo" />
+    <span class="nav-logo-text">Section<span>Finder</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#sections">Sections</a></li>
+    <li><a href="#who">For Who</a></li>
+    <li><a href="#" class="nav-cta">Get the App</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content" id="mainContent">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <svg class="hero-ibeam" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 75,105 L 425,105 L 425,155 L 307,155 A 25,25 0 0,0 282,180 L 282,320 A 25,25 0 0,0 307,345 L 425,345 L 425,395 L 75,395 L 75,345 L 193,345 A 25,25 0 0,0 218,320 L 218,180 A 25,25 0 0,0 193,155 L 75,155 Z"
+        fill="none" stroke="#00BCD4" stroke-width="2"/>
+      <line x1="250" y1="60" x2="250" y2="440" stroke="#00BCD4" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="30" y1="250" x2="470" y2="250" stroke="#00BCD4" stroke-width="0.5" stroke-dasharray="8,4"/>
+    </svg>
+    <div class="hero-content">
+      <div class="hero-eyebrow">South Africa · More Regions Coming Soon</div>
+      <h1>Steel sections,<br /><em>always at hand.</em></h1>
+      <p class="hero-sub">
+        The professional structural steel section reference for <strong>engineers, fabricators and detailers</strong>.
+        Complete dimensional and structural properties for every major South African profile.
+      </p>
+      <div class="hero-actions">
+        <!-- TODO: replace "#" with real Play Store listing URL once live -->
+        <a href="#" class="play-badge-link">
+          <img src="google-play-badge.svg" alt="Get it on Google Play" class="play-badge-img" />
+        </a>
+        <a href="#" class="btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Open Web App
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number">541</div>
+          <div class="stat-label">Sections</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-number">14</div>
+          <div class="stat-label">Profiles</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Properties</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-number">ZA</div>
+          <div class="stat-label">Country</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCROLLING SECTIONS BAR -->
+  <div class="sections-bar">
+    <div class="sections-bar-inner">
+      <span class="section-tag highlight">203×133×25 UB</span>
+      <span class="section-tag">533×210×82 UB</span>
+      <span class="section-tag highlight">152×152×23 UC</span>
+      <span class="section-tag">100×50×3 RHS</span>
+      <span class="section-tag highlight">200×65 PFC</span>
+      <span class="section-tag">76.1×3.2 CHS</span>
+      <span class="section-tag highlight">80×80×8 EA</span>
+      <span class="section-tag">150×90×12 UA</span>
+      <span class="section-tag highlight">IPE 200</span>
+      <span class="section-tag">120×120×5 SHS</span>
+      <span class="section-tag highlight">25 RB</span>
+      <span class="section-tag">50×6 FLT</span>
+      <span class="section-tag highlight">40×40 SQ</span>
+      <span class="section-tag">TFC 150</span>
+      <!-- duplicate for seamless loop -->
+      <span class="section-tag highlight">203×133×25 UB</span>
+      <span class="section-tag">533×210×82 UB</span>
+      <span class="section-tag highlight">152×152×23 UC</span>
+      <span class="section-tag">100×50×3 RHS</span>
+      <span class="section-tag highlight">200×65 PFC</span>
+      <span class="section-tag">76.1×3.2 CHS</span>
+      <span class="section-tag highlight">80×80×8 EA</span>
+      <span class="section-tag">150×90×12 UA</span>
+      <span class="section-tag highlight">IPE 200</span>
+      <span class="section-tag">120×120×5 SHS</span>
+      <span class="section-tag highlight">25 RB</span>
+      <span class="section-tag">50×6 FLT</span>
+      <span class="section-tag highlight">40×40 SQ</span>
+      <span class="section-tag">TFC 150</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-label">Why SectionFinder</div>
+    <h2 class="section-title">Everything you need,<br />nothing you don't.</h2>
+    <p class="section-sub">Built for the workshop floor, the drawing office, and everywhere in between.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="feature-title">Instant Search</div>
+        <div class="feature-desc">Find any section by dimension in seconds. Type 203x133 and get exactly what you need — no scrolling, no guessing.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Full Structural Data</div>
+        <div class="feature-desc">Second moments of area, section moduli, torsional properties, warping constants, plastic resistance values — the complete picture.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        </div>
+        <div class="feature-title">Cross-Section Diagrams</div>
+        <div class="feature-desc">Annotated technical diagrams for every section family. See exactly what h, b, tw, tf and r1 mean on the actual profile.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="feature-title">Multi-Country</div>
+        <div class="feature-desc">South Africa now. United Kingdom and United States coming soon. One app, one interface, multiple markets.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="feature-title">14 Section Families</div>
+        <div class="feature-desc">UB, UC, IPE, IPEAA, PFC, TFC, RHS, SHS, CHS, EA, UA, RB, SQ and FLT. Every profile used in South African steel construction.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-title">Professional Grade</div>
+        <div class="feature-desc">Built on recognised structural steel standards. Always verify against applicable local standards before use in structural calculations.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILES -->
+  <section class="profiles" id="sections">
+    <div class="profiles-inner">
+      <div class="section-label">Section Profiles</div>
+      <h2 class="section-title">Every profile. Every dimension.</h2>
+      <p class="section-sub">541 sections across 14 families. Filtered by country, sorted by mass.</p>
+      <div class="profiles-grid">
+        <div class="profile-item"><div class="profile-code">UB</div><div class="profile-name">Universal Beam</div></div>
+        <div class="profile-item"><div class="profile-code">UC</div><div class="profile-name">Universal Column</div></div>
+        <div class="profile-item"><div class="profile-code">IPE</div><div class="profile-name">European I-beam</div></div>
+        <div class="profile-item"><div class="profile-code">IPEAA</div><div class="profile-name">Lightweight IPE</div></div>
+        <div class="profile-item"><div class="profile-code">PFC</div><div class="profile-name">Parallel Flange Channel</div></div>
+        <div class="profile-item"><div class="profile-code">TFC</div><div class="profile-name">Tapered Flange Channel</div></div>
+        <div class="profile-item"><div class="profile-code">RHS</div><div class="profile-name">Rectangular Hollow</div></div>
+        <div class="profile-item"><div class="profile-code">SHS</div><div class="profile-name">Square Hollow</div></div>
+        <div class="profile-item"><div class="profile-code">CHS</div><div class="profile-name">Circular Hollow</div></div>
+        <div class="profile-item"><div class="profile-code">EA</div><div class="profile-name">Equal Angle</div></div>
+        <div class="profile-item"><div class="profile-code">UA</div><div class="profile-name">Unequal Angle</div></div>
+        <div class="profile-item"><div class="profile-code">RB</div><div class="profile-name">Round Bar</div></div>
+        <div class="profile-item"><div class="profile-code">SQ</div><div class="profile-name">Square Bar</div></div>
+        <div class="profile-item"><div class="profile-code">FLT</div><div class="profile-name">Flat Bar</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR WHO -->
+  <section class="for-who" id="who">
+    <div class="section-label">Built For</div>
+    <h2 class="section-title">If you work with steel,<br />this is your app.</h2>
+    <p class="section-sub">Designed for everyone in the structural steel construction chain.</p>
+    <div class="audience-grid">
+      <div class="audience-item"><div class="audience-dot"></div>Structural Engineers</div>
+      <div class="audience-item"><div class="audience-dot"></div>Civil Engineers</div>
+      <div class="audience-item"><div class="audience-dot"></div>Boilermakers</div>
+      <div class="audience-item"><div class="audience-dot"></div>Steel Fabricators</div>
+      <div class="audience-item"><div class="audience-dot"></div>Detailers</div>
+      <div class="audience-item"><div class="audience-dot"></div>Procurement Staff</div>
+      <div class="audience-item"><div class="audience-dot"></div>Estimators</div>
+      <div class="audience-item"><div class="audience-dot"></div>Engineering Students</div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <h2>Start using SectionFinder today.</h2>
+    <p>Free to download. No account required. Section data at your fingertips.</p>
+    <div class="hero-actions">
+      <!-- TODO: replace "#" with real Play Store listing URL once live -->
+      <a href="#" class="play-badge-link">
+        <img src="google-play-badge.svg" alt="Get it on Google Play" class="play-badge-img" />
+      </a>
+      <a href="#" class="btn-secondary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Open Web App
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-row">
+        <div class="footer-brand">
+          <strong>SectionFinder</strong> by LEAM &nbsp;·&nbsp; © 2026
+        </div>
+        <div class="footer-links">
+          <a href="#" onclick="showLegal('privacy')">Privacy Policy</a>
+          <div class="divider"></div>
+          <a href="#" onclick="showLegal('terms')">Terms of Service</a>
+          <div class="divider"></div>
+          <a href="#" onclick="showLegal('disclaimer')">Engineering Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end main-content -->
+
+<!-- LEGAL PAGES -->
+<div class="legal-page" id="privacyPage">
+  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
+  <div class="section-label">Legal</div>
+  <h1 class="legal-title">Privacy Policy</h1>
+  <div class="legal-content" id="privacyContent"></div>
+</div>
+
+<div class="legal-page" id="termsPage">
+  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
+  <div class="section-label">Legal</div>
+  <h1 class="legal-title">Terms of Service</h1>
+  <div class="legal-content" id="termsContent"></div>
+</div>
+
+<div class="legal-page" id="disclaimerPage">
+  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
+  <div class="section-label">Legal</div>
+  <h1 class="legal-title">Engineering Disclaimer</h1>
+  <div class="legal-content" id="disclaimerContent"></div>
+</div>
+
+<script>
+  function showMain() {
+    document.getElementById('mainContent').classList.remove('hidden');
+    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
+    window.scrollTo(0, 0);
+  }
+
+  function showLegal(page) {
+    document.getElementById('mainContent').classList.add('hidden');
+    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page + 'Page').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Legal content is loaded from legal-content.js
+</script>
+<script src="legal-content.js"></script>
+
+</body>
+</html>
