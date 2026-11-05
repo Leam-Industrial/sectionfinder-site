@@ -4,17 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SectionFinder — Steel Section Reference</title>
-  <meta name="description" content="South Africa's professional structural steel section reference app. 541 sections, 14 profiles, full structural properties. For engineers, fabricators and detailers." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="description" content="South Africa's professional structural steel section reference app. 541 sections, 14 profiles, full structural properties, plus weight, plate girder and trig calculators. For engineers, fabricators and detailers." />
+  <meta name="theme-color" content="#0d1117" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SectionFinder — Steel Section Reference" />
+  <meta property="og:description" content="Structural steel section properties and fabrication calculators for South Africa. Free, no account required." />
+  <meta property="og:url" content="https://sectionfinder.com/" />
+  <link rel="canonical" href="https://sectionfinder.com/" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <!-- Self-hosted fonts (no requests to Google) -->
+  <link rel="preload" href="/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <style>
+    @font-face {
+      font-family: 'Space Grotesk';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: url('/fonts/space-grotesk-latin-300-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Grotesk';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Grotesk';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Grotesk';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('/fonts/space-grotesk-latin-600-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Grotesk';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 300;
+      font-display: swap;
+      src: url('/fonts/inter-latin-300-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url('/fonts/inter-latin-500-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Mono';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/space-mono-latin-400-normal.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Space Mono';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/fonts/space-mono-latin-700-normal.woff2') format('woff2');
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -259,22 +337,6 @@
       transform: translateY(-1px);
     }
 
-    .play-badge-link {
-      display: inline-flex;
-      align-items: center;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-
-    .play-badge-link:hover {
-      transform: translateY(-1px);
-      opacity: 0.9;
-    }
-
-    .play-badge-img {
-      height: 52px;
-      width: auto;
-      display: block;
-    }
 
     .hero-stats {
       display: flex;
@@ -641,62 +703,6 @@
       letter-spacing: 0.2px;
     }
 
-    /* ── LEGAL PAGES ── */
-    .legal-page {
-      display: none;
-      padding: 120px 48px 80px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .legal-page.active { display: block; }
-
-    .legal-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--teal);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 40px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-family: var(--font-body);
-    }
-
-    .legal-back:hover { opacity: 0.8; }
-
-    .legal-title {
-      font-family: var(--font-display);
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 8px;
-    }
-
-    .legal-meta {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 48px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .legal-content {
-      color: var(--steel);
-      font-size: 15px;
-      line-height: 1.8;
-      white-space: pre-wrap;
-      font-family: var(--font-body);
-    }
-
-    /* ── MAIN/LEGAL TOGGLE ── */
-    .main-content { display: block; }
-    .main-content.hidden { display: none; }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 16px 24px; }
@@ -711,7 +717,6 @@
       footer { padding: 32px 24px; }
       .footer-row { flex-direction: column; align-items: flex-start; }
       .sections-bar { padding: 16px 24px; }
-      .legal-page { padding: 100px 24px 60px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -724,15 +729,16 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo" onclick="showMain()">
+  <a href="/" class="nav-logo">
     <img src="logo.svg" alt="SectionFinder logo" />
     <span class="nav-logo-text">Section<span>Finder</span></span>
   </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
+    <li><a href="#tools">Tools</a></li>
     <li><a href="#sections">Sections</a></li>
     <li><a href="#who">For Who</a></li>
-    <li><a href="https://app.sectionfinder.com" class="nav-cta">Get the App</a></li>
+    <li><a href="https://app.sectionfinder.com" class="nav-cta">Open Web App</a></li>
   </ul>
 </nav>
 
@@ -756,11 +762,7 @@
         Complete dimensional and structural properties for every major South African profile.
       </p>
       <div class="hero-actions">
-        <!-- TODO: replace "#" with real Play Store listing URL once live -->
-        <a href="https://app.sectionfinder.com" class="play-badge-link">
-          <img src="google-play-badge.svg" alt="Get it on Google Play" class="play-badge-img" />
-        </a>
-        <a href="https://app.sectionfinder.com" class="btn-secondary">
+        <a href="https://app.sectionfinder.com" class="btn-primary">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           Open Web App
         </a>
@@ -875,6 +877,37 @@
     </div>
   </section>
 
+  <!-- TOOLS -->
+  <section class="features" id="tools">
+    <div class="section-label">Built-in Tools</div>
+    <h2 class="section-title">Calculators for the<br />workshop and the office.</h2>
+    <p class="section-sub">Quick answers without leaving the app. Copy any result straight into a spreadsheet.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 21h14"/><path d="M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0L5 7z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0l-3-7z"/></svg>
+        </div>
+        <div class="feature-title">Weight Calculator</div>
+        <div class="feature-desc">Pick a section, enter a length and quantity, and get the mass in kg and lb. Build a list of bars, see the total, and copy it to a spreadsheet.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M5 4h14"/><path d="M5 20h14"/><path d="M12 4v16"/></svg>
+        </div>
+        <div class="feature-title">Plate Girder Calculator</div>
+        <div class="feature-desc">Enter the plate sizes for a fabricated I-girder and get its mass per metre, cross-sectional area and surface area, with equal or unequal flanges.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polygon points="4 20 4 5 19 20"/><path d="M4 16h4v4"/></svg>
+        </div>
+        <div class="feature-title">Trig Calculator</div>
+        <div class="feature-desc">Solve a right-angled triangle from any two values: rise, run, length or angle. Gives the slope angle and rise per metre for braces, stairs and ladders.</div>
+      </div>
+    </div>
+    <p class="section-sub" style="margin: 32px 0 0;">More fabrication tools are on the way.</p>
+  </section>
+
   <!-- PROFILES -->
   <section class="profiles" id="sections">
     <div class="profiles-inner">
@@ -920,13 +953,9 @@
   <!-- CTA BAND -->
   <div class="cta-band">
     <h2>Start using SectionFinder today.</h2>
-    <p>Free to download. No account required. Section data at your fingertips.</p>
+    <p>Free to use. No account required. Section data and fabrication calculators at your fingertips.</p>
     <div class="hero-actions">
-      <!-- TODO: replace "#" with real Play Store listing URL once live -->
-      <a href="https://app.sectionfinder.com" class="play-badge-link">
-        <img src="google-play-badge.svg" alt="Get it on Google Play" class="play-badge-img" />
-      </a>
-      <a href="https://app.sectionfinder.com" class="btn-secondary">
+      <a href="https://app.sectionfinder.com" class="btn-primary">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         Open Web App
       </a>
@@ -938,7 +967,7 @@
     <div class="footer-inner">
       <div class="footer-row">
         <div class="footer-brand">
-          <strong>SectionFinder</strong> by LEAM &nbsp;·&nbsp; © 2026
+          <strong>SectionFinder</strong> &nbsp;·&nbsp; © 2026
         </div>
         <div class="footer-links">
           <a href="https://sectionfinder.com/privacy/">Privacy Policy</a>
@@ -953,45 +982,6 @@
 
 </div><!-- end main-content -->
 
-<!-- LEGAL PAGES -->
-<div class="legal-page" id="privacyPage">
-  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
-  <div class="section-label">Legal</div>
-  <h1 class="legal-title">Privacy Policy</h1>
-  <div class="legal-content" id="privacyContent"></div>
-</div>
-
-<div class="legal-page" id="termsPage">
-  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
-  <div class="section-label">Legal</div>
-  <h1 class="legal-title">Terms of Service</h1>
-  <div class="legal-content" id="termsContent"></div>
-</div>
-
-<div class="legal-page" id="disclaimerPage">
-  <button class="legal-back" onclick="showMain()">← Back to SectionFinder</button>
-  <div class="section-label">Legal</div>
-  <h1 class="legal-title">Engineering Disclaimer</h1>
-  <div class="legal-content" id="disclaimerContent"></div>
-</div>
-
-<script>
-  function showMain() {
-    document.getElementById('mainContent').classList.remove('hidden');
-    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
-    window.scrollTo(0, 0);
-  }
-
-  function showLegal(page) {
-    document.getElementById('mainContent').classList.add('hidden');
-    document.querySelectorAll('.legal-page').forEach(p => p.classList.remove('active'));
-    document.getElementById(page + 'Page').classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  // Legal content is loaded from legal-content.js
-</script>
-<script src="legal-content.js"></script>
 
 </body>
 </html>
